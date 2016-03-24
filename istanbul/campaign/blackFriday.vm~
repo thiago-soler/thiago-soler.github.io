@@ -1,0 +1,6 @@
+#!vm;utf-8
+{
+	"$!{campaign}": {
+		"testeAtualizacao": 4
+	}
+}
