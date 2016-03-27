@@ -1,0 +1,1 @@
+"use strict";$("#panel-nav .item-1").click(function(e){e.preventDefault(),$("#panel-nav .item-1").removeClass("selected"),$("#panel-nav .item-1").removeClass("active"),$(this).is(".list")===!0?$(this).addClass("active"):$(this).addClass("selected")});
