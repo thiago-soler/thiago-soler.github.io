@@ -6,19 +6,19 @@
 	/**
 	 * Classe de dominios
 	 */
-	function Domains () {
+	function Domains (json) {
 
 		var $public = this,
 			$private = {};
 
-		$public.campaign = new Campaign();
+		$public.campaign = new Campaign(json);
 
 	}
 
 	/**
 	 * Classe de campanhas
 	 */
-	function Campaign () {
+	function Campaign (json) {
 
 		var $public = this,
 			$private = {};
@@ -27,17 +27,26 @@
 		 * Storage para armazenar o JSON apos ser normalizado
 		 * @type {Object}
 		 */
-		$public.storage = undefined;
+		$private.storage = undefined;
+
+		$private.POINTERS = {
+			'YEARS' : 'YEARS_',
+			'CONFIG': 'CONFIG_',
+			'EXTENSIONS': 'EXTENSIONS_'
+		};
 
 		$private.getFormatedJson = function (json) {
 
-			if ($public.storage !== undefined) {
+			if ($private.storage !== undefined) {
 
-				return $public.storage;
+				return $private.storage;
 
 			} else {
-			
-				return $private.formatJSON(json);
+				
+				$private.storage = $private.formatJSON(json);
+
+				window.storage = $private.storage;
+				return $private.storage;
 
 			}
 
@@ -47,7 +56,7 @@
 
 			var listFilter = obj[key],
 				idx = 0,
-				extension = '';
+				data = '';
 
 			merge = merge || {};
 
@@ -55,9 +64,9 @@
 
 			for (idx in listFilter) {
 
-				extension = listFilter[idx];
+				data = listFilter[idx];
 
-				merge[extension] = obj;
+				merge[data] = obj;
 
 			}
 
@@ -66,30 +75,39 @@
 
 		};
 
-		$private.iterateMetaInfo = function (list) {
-
-		};
-
 		$private.formatJSON = function (json) {
+
+			json.CAMPAIGN.META_CONFIG = new Object();
 
 			var metaInfoExtensions = json.CAMPAIGN.META_INFO_EXTENSIONS,
 				metaInfo = {},
-				idx = 0,
+				idxA = 0,
+				idxB = 0,
 				formatedDataA = {};
 
-			for (idx in metaInfoExtensions) {
+			for (idxA in metaInfoExtensions) {
 
-				var formatedDataB = {};
+				var formatedDataB = {},
+					metaConfig = json.CAMPAIGN.META_CONFIG,
+					pointerExtensions = $private.POINTERS.EXTENSIONS + idxA,
+					pointerYears = $private.POINTERS.YEARS,
+					pointerConfig = $private.POINTERS.CONFIG + idxA,
+					metaConfigExtensions = metaConfig[pointerExtensions] = {},
+					metaConfigYears = {};
 
-				metaInfo = metaInfoExtensions[idx];
 				
+				metaConfigExtensions[pointerConfig] = metaInfoExtensions[idxA];
 				
-				for (idx in metaInfo.PERIOD) {
+				metaInfo = metaConfigExtensions[pointerConfig];
 
-					formatedDataB = $private.replicatesData('LIST_YEARS', metaInfo.PERIOD[idx], formatedDataB);
+				for (idxB in metaInfo.PERIOD) {
+
+					metaConfigExtensions[pointerYears + idxB] = metaInfo.PERIOD[idxB];
+
+					formatedDataB = $private.replicatesData('LIST_YEARS', metaConfigExtensions[pointerYears + idxB], formatedDataB);
 
 				}
-				
+
 				metaInfo.PERIOD = formatedDataB;
 
 				formatedDataA = $private.replicatesData('LIST_EXTENSIONS', metaInfo, formatedDataA);
@@ -108,19 +126,33 @@
 		 * @param  {Object} json JSON retornado pelo monaco
 		 * @return {Object}      JSON formatado com apenas os dados do meta info
 		 */
-		$public.getMetaInfoCampaign = function (json) {
+		$public.getMetaInfoCampaign = function () {
 
-			json = $private.getFormatedJson(json);
-			
-			console.log(json);
-
-			window.test = json;
+			return json.CAMPAIGN.META_INFO_CAMPAIGN || {};
 
 		};
 
 		$public.getMetaInfoExtensions = function () {
 
+			return json.CAMPAIGN.META_INFO_EXTENSIONS || {};
+
 		};
+
+		$public.getMetaInfoExtension = function (extension) {
+
+			extension = extension || '';
+
+			return json.CAMPAIGN.META_INFO_EXTENSIONS[extension] || {};
+
+		};
+
+		$private.init = function (json) {
+
+			json = $private.getFormatedJson(json);
+
+			return json;
+
+		}(json);
 	}
 
 	// Extende o objeto privado com a classe Domains
