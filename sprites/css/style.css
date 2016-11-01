@@ -1,0 +1,80 @@
+*{margin:0;padding:0;border:0; font:bold 14px/17px Arial; text-align: center;}
+
+.container{width:100%; max-width: 960px; position:relative; margin:0 auto;}
+.blockA{position: relative; float: left;}
+.clearBoth{clear: both;}
+
+.exampleA{
+	width: 256px;
+	height: 256px;
+	position: relative;
+	float: left;
+	background: url('img/sprite2.png') no-repeat -3840px 0;
+	-webkit-animation: exampleA 1.8s steps(16) 1;
+	animation: exampleA 1.8s steps(16) 1;
+}
+
+.exampleB{
+	width: 35px;
+	height: 40px;
+	position: relative;
+	float: left;
+	background: url('img/sprite4.jpg') no-repeat 0 0;
+	-webkit-animation: exampleB .8s steps(12) infinite;
+	animation: exampleB .8s steps(12) infinite;
+}
+
+.exampleC{
+	width: 26.66666666666667%;
+	position: relative;
+	float: left;
+	overflow: hidden;
+	background: #f5f5f5;
+}
+
+.exampleC img{
+	width: 800%;
+	position: relative;
+	float: left;
+	-webkit-animation: exampleC .8s steps(8) infinite;
+	animation: exampleC .8s steps(8) infinite;
+}
+
+.exampleC.stop img {
+    -webkit-animation-play-state: paused; /* Safari and Chrome */
+    animation-play-state: paused;
+}
+
+/* animations - START */
+@-webkit-keyframes exampleA{
+	0%  {background-position: 0px 0px;}
+	100%  {background-position: -4096px 0px;}
+}
+
+@keyframes exampleA{
+	0%  {background-position: 0px 0px;}
+	100%  {background-position: -4096px 0px;}
+}
+
+@-webkit-keyframes exampleB {
+	0%  {background-position: 0px 0px;}
+	100%  {background-position: -420px 0px;}
+}
+
+@keyframes exampleB {
+	0%  {background-position: 0px 0px;}
+	100%  {background-position: -420px 0px;}
+}
+
+
+@-webkit-keyframes exampleC {
+	0%  {left: 0px;}
+	100%  {left:-800%;}
+}
+
+@keyframes exampleC{
+	0%  {left: 0px;}
+	100%  {left:-800%;}
+}
+
+/* animations - END */
